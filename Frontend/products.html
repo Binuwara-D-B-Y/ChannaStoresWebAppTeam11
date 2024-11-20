@@ -89,9 +89,7 @@
                     <td>Rs.${product.price.toFixed(2)}</td>
                     <td>${product.quantity}</td>
                     <td>${product.category}</td>
-                    <td>
-                        <button onclick="addToCart(${product.id})">Add to Cart</button>
-                    </td>
+                    <td><button onclick="addToCart(${product.id})">Add to Cart</button></td>
                 `;
                 productTableBody.appendChild(row);
             });
@@ -109,14 +107,22 @@
             if (product) {
                 const quantity = prompt(`Enter the quantity for ${product.name} (Available: ${product.quantity}):`);
                 if (quantity && !isNaN(quantity) && quantity > 0 && quantity <= product.quantity) {
-                    // Update product quantity in the inventory
-                    product.quantity -= quantity;
+                    // Get the cart from localStorage (or initialize an empty cart if not available)
+                    let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-                    // Simulate adding to cart (you could update a cart array here)
+                    // Check if the product is already in the cart
+                    const existingProduct = cart.find(item => item.product.id === product.id);
+                    if (existingProduct) {
+                        existingProduct.quantity += parseInt(quantity); // Update quantity if already in cart
+                    } else {
+                        cart.push({ product: product, quantity: parseInt(quantity) }); // Add new product to cart
+                    }
+
+                    // Save the updated cart to localStorage
+                    localStorage.setItem('cart', JSON.stringify(cart));
+
+                    // Confirmation alert
                     alert(`${quantity} of ${product.name} added to your cart!`);
-
-                    // Re-render products to reflect the updated stock
-                    renderProducts();
                 } else {
                     alert("Invalid quantity! Please enter a valid number within the available stock.");
                 }
