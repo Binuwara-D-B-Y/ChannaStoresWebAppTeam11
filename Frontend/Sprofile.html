@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul class="tabs">
+                <li><a href="inventory.html" class="tab">Inventory</a></li>
+                <li><a href="Sprofile.html" class="tab active">Profile</a></li>                
+                <li class="signout-tab"><a href="login.html" class="tab">Sign Out</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h2>User Profile</h2>
+
+        <!-- Update Profile Form -->
+        <form id="update-profile-form">
+            <label for="name">Name:</label>
+            <input type="text" id="name" value="John Doe"><br><br>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" value="john@example.com"><br><br>
+
+            <label for="phone">Phone:</label>
+            <input type="text" id="phone" value="123-456-7890"><br><br>
+
+            <label for="age">Age:</label>
+            <input type="number" id="age" value="30" min="0"><br><br> <!-- Restrict negative values -->
+
+            <button type="submit">Update Profile</button>
+        </form>
+
+        <!-- Update Password Section -->
+        <section id="update-password">
+            <h3>Update Password</h3>
+            <form id="update-password-form">
+                <label for="current-password">Current Password:</label>
+                <input type="password" id="current-password" placeholder="Enter current password" required><br><br>
+
+                <label for="new-password">New Password:</label>
+                <input type="password" id="new-password" placeholder="Enter new password" required><br><br>
+
+                <label for="confirm-password">Confirm New Password:</label>
+                <input type="password" id="confirm-password" placeholder="Confirm new password" required><br><br>
+
+                <button type="submit">Update Password</button>
+            </form>
+        </section>
+
+        <!-- Delete Account Section -->
+        <section id="delete-account">
+            <h3>Delete Account</h3>
+            <p>Warning: Deleting your account is irreversible. All your data will be permanently removed.</p>
+            <button id="delete-account-button" style="background-color: red; color: white;">Delete My Account</button>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Shop Management System</p>
+    </footer>
+
+    <script>
+        // Update Profile Handler
+        document.getElementById('update-profile-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const age = document.getElementById('age').value;
+
+            alert(`Profile updated successfully!\n\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nAge: ${age}`);
+            // Logic to save updated profile (backend integration)
+        });
+
+        // Update Password Handler
+        document.getElementById('update-password-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const currentPassword = document.getElementById('current-password').value;
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+
+            if (newPassword !== confirmPassword) {
+                alert('New passwords do not match!');
+                return;
+            }
+
+            alert('Password updated successfully!');
+            // Logic to update password (backend integration)
+        });
+
+        // Delete Account Handler
+        document.getElementById('delete-account-button').addEventListener('click', function() {
+            const confirmation = confirm('Are you sure you want to delete your account? This action cannot be undone.');
+            if (confirmation) {
+                alert('Account deleted successfully!');
+                // Logic to delete the account (backend integration)
+                window.location.href = 'login.html'; // Redirect to homepage after deletion
+            }
+        });
+    </script>
+</body>
+</html>
