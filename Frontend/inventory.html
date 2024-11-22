@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Custom success alert style */
+        .confirmation-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .confirmation-modal-content {
+            background-color: #4CAF50; /* Green for success */
+            padding: 20px;
+            border-radius: 5px;
+            width: 300px;
+            color: white;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .confirmation-modal button {
+            margin-top: 10px;
+            padding: 8px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            background-color: #fff;
+            color: #4CAF50;
+            border-radius: 5px;
+        }
+
+        .confirmation-modal button:hover {
+            background-color: #45a049;
+            color: white;
+        }
+
+        .confirmation-modal .modal-actions {
+            margin-top: 15px;
+        }
+
+        .confirmation-modal .modal-actions button {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul class="tabs">
+			    <li class="store-name">Channa Stores</li>
+                <li><a href="inventory.html" class="tab active">Inventory</a></li>
+                <li><a href="Sprofile.html" class="tab">Profile</a></li>
+                <li class="signout-tab"><a href="login.html" class="tab">Sign Out</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Inventory Management</h2>
+
+        <!-- Add New Product Form -->
+        <section id="add-product">
+            <h3>Add New Product</h3>
+            <form id="add-product-form">
+                <label for="product-id">Product ID:</label>
+                <input type="number" id="product-id" min="1" required> <!-- Unique ID -->
+
+                <label for="product-name">Product Name:</label>
+                <input type="text" id="product-name" required> 
+
+                <label for="product-price">Price:</label>
+                <input type="number" id="product-price" min="0" required> <!-- Restrict negative values -->
+
+                <label for="product-quantity">Stock Quantity:</label>
+                <input type="number" id="product-quantity" min="0" required> <!-- Restrict negative values -->
+
+                <label for="product-category">Category:</label>
+                <select id="product-category" required>
+                    <option value="Category A">Category A</option>
+                    <option value="Category B">Category B</option>
+                    <option value="Category C">Category C</option>
+                </select>
+
+                <button type="submit">Add Product</button>
+            </form>
+        </section>
+
+        <!-- Update Product Form -->
+        <section id="update-product">
+            <h3>Update Product</h3>
+            <form id="update-product-form">
+                <label for="update-product-id">Product ID:</label>
+                <input type="number" id="update-product-id" required>
+
+                <label for="update-product-name">Product Name:</label>
+                <input type="text" id="update-product-name">
+
+                <label for="update-product-price">Price:</label>
+                <input type="number" id="update-product-price" min="0"> <!-- Restrict negative values -->
+
+                <label for="update-product-quantity">Stock Quantity:</label>
+                <input type="number" id="update-product-quantity" min="0"> <!-- Restrict negative values -->
+
+                <label for="update-product-category">Category:</label>
+                <select id="update-product-category">
+                    <option value="Category A">Category A</option>
+                    <option value="Category B">Category B</option>
+                    <option value="Category C">Category C</option>
+                </select>
+
+                <button type="submit">Update Product</button>
+            </form>
+        </section>
+
+        <!-- Delete Product Form -->
+        <section id="delete-product">
+            <h3>Delete Product</h3>
+            <form id="delete-product-form">
+                <label for="delete-product-id">Product ID:</label>
+                <input type="number" id="delete-product-id" required>
+                <button type="submit">Delete Product</button>
+            </form>
+        </section>
+
+        <!-- Product List Table -->
+        <section id="product-list">
+            <h3>Product List</h3>
+            <table id="products-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Stock Quantity</th>
+                        <th>Category</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dynamically populated product rows will go here -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Shop Management System</p>
+    </footer>
+
+    <!-- JavaScript for CRUD Operations -->
+    <script>
+        // Dummy product data (to be replaced by actual DB data)
+        const products = [
+            { id: 1, name: 'Product 1', price: 10.00, quantity: 100, category: 'Category A' },
+            { id: 2, name: 'Product 2', price: 15.00, quantity: 50, category: 'Category B' },
+        ];
+
+        let actionType = '';
+        let actionData = null;
+
+        // Function to render the product list in the table
+        function renderProducts() {
+            const productTableBody = document.querySelector('#products-table tbody');
+            productTableBody.innerHTML = '';
+            products.forEach(product => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${product.id}</td>
+                    <td>${product.name}</td>
+                    <td>Rs.${product.price.toFixed(2)}</td>
+                    <td>${product.quantity}</td>
+                    <td>${product.category}</td>
+                    <td>
+                        <button onclick="editProduct(${product.id})">Edit</button>
+                        <button onclick="confirmDeleteProduct(${product.id})">Delete</button>
+                    </td>
+                `;
+                productTableBody.appendChild(row);
+            });
+        }
+
+        // Function to validate unique product ID
+        function isProductIdUnique(id) {
+            return !products.some(product => product.id === id);
+        }
+
+        // Add product
+        document.getElementById('add-product-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const newProductId = parseInt(document.getElementById('product-id').value);
+            const newProductName = document.getElementById('product-name').value;
+            const newProductPrice = parseFloat(document.getElementById('product-price').value);
+            const newProductQuantity = parseInt(document.getElementById('product-quantity').value);
+            const newProductCategory = document.getElementById('product-category').value;
+
+            if (!isProductIdUnique(newProductId)) {
+                alert(`Product ID ${newProductId} is already in use. Please use a unique ID.`);
+                return;
+            }
+
+            const newProduct = {
+                id: newProductId,
+                name: newProductName,
+                price: newProductPrice,
+                quantity: newProductQuantity,
+                category: newProductCategory,
+            };
+
+            products.push(newProduct);
+            renderProducts();
+            alert("Product added successfully!");
+        });
+
+        // Update product
+        document.getElementById('update-product-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const productId = parseInt(document.getElementById('update-product-id').value);
+            const product = products.find(p => p.id === productId);
+
+            if (product) {
+                const updatedName = document.getElementById('update-product-name').value || product.name;
+                const updatedPrice = parseFloat(document.getElementById('update-product-price').value) || product.price;
+                const updatedQuantity = parseInt(document.getElementById('update-product-quantity').value) || product.quantity;
+                const updatedCategory = document.getElementById('update-product-category').value || product.category;
+
+                product.name = updatedName;
+                product.price = updatedPrice;
+                product.quantity = updatedQuantity;
+                product.category = updatedCategory;
+
+                renderProducts();
+                alert("Product updated successfully!");
+            } else {
+                alert(`Product with ID ${productId} does not exist.`);
+            }
+        });
+
+        // Delete product
+        document.getElementById('delete-product-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const productId = parseInt(document.getElementById('delete-product-id').value);
+            const productIndex = products.findIndex(p => p.id === productId);
+
+            if (productIndex > -1) {
+                products.splice(productIndex, 1);
+                renderProducts();
+                alert("Product deleted successfully!");
+            } else {
+                alert(`Product with ID ${productId} does not exist.`);
+            }
+        });
+
+        // Edit product functionality
+        function editProduct(id) {
+            const product = products.find(p => p.id === id);
+            if (product) {
+                document.getElementById('update-product-id').value = product.id;
+                document.getElementById('update-product-name').value = product.name;
+                document.getElementById('update-product-price').value = product.price;
+                document.getElementById('update-product-quantity').value = product.quantity;
+                document.getElementById('update-product-category').value = product.category;
+            }
+        }
+
+        // Confirm delete product
+        function confirmDeleteProduct(id) {
+            const product = products.find(p => p.id === id);
+            if (product && confirm(`Are you sure you want to delete ${product.name}?`)) {
+                const productIndex = products.findIndex(p => p.id === id);
+                products.splice(productIndex, 1);
+                renderProducts();
+                alert("Product deleted successfully!");
+            }
+        }
+
+        // Initial render of the product list
+        renderProducts();
+    </script>
+</body>
+</html>
