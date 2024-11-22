@@ -37,8 +37,9 @@
             <label for="phone">Phone:</label>
             <input type="text" id="phone" value="123-456-7890"><br><br>
 
-            <label for="age">Age:</label>
-            <input type="number" id="age" value="30" min="0"><br><br> <!-- Restrict negative values -->
+            <label for="birthday">Birthday:</label>
+            <input type="date" id="birthday"><br><br>
+
 
             <button type="submit">Update Profile</button>
         </form>
@@ -79,9 +80,9 @@
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const phone = document.getElementById('phone').value;
-            const age = document.getElementById('age').value;
+            const birthday = document.getElementById('birthday').value;
 
-            alert(`Profile updated successfully!\n\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nAge: ${age}`);
+            alert(`Profile updated successfully!\n\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nBirthday: ${birthday}`);
             // Logic to save updated profile (backend integration)
         });
 
