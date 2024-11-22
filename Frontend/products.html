@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products</title>
+    <link rel="stylesheet" href="styles.css">
+    
+</head>
+<body>
+    <header>
+        <nav>
+            <ul class="tabs">
+				<li class="store-name">Channa Stores</li>
+                <li><a href="products.html" class="tab active">Products</a></li>
+                <li><a href="cart.html" class="tab">Cart</a></li>
+                <li><a href="orders.html" class="tab">Orders</a></li>
+                <li><a href="profile.html" class="tab">Profile</a></li>
+                <li class="signout-tab"><a href="login.html" class="tab">Sign Out</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Product Catalog</h2>
+
+        <!-- Category Filter Dropdown -->
+        <section id="category-filter">
+            <label for="category-select">Filter by Category:</label>
+            <select id="category-select">
+                <option value="all">All Categories</option>
+                <option value="Category A">Category A</option>
+                <option value="Category B">Category B</option>
+                <option value="Category C">Category C</option>
+            </select>
+        </section>
+
+        <!-- Product List Table -->
+        <section id="product-list">
+            <h3>Product List</h3>
+            <table id="products-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Stock Quantity</th>
+                        <th>Category</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dynamically populated product rows will go here -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <!-- Quantity Pop-Up Modal -->
+    <div id="quantity-modal" class="modal">
+        <div class="modal-content">
+            <span id="close-modal" class="close">&times;</span>
+            <h3>Add to Cart</h3>
+            <p id="modal-product-name"></p>
+            <label for="modal-quantity-input">Enter Quantity:</label>
+            <input type="number" id="modal-quantity-input" min="1" step="1" />
+            <button id="modal-add-to-cart-btn">Add to Cart</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Shop Management System</p>
+    </footer>
+
+    <script>
+        // Sample product data (with categories)
+        const products = [
+            { id: 1, name: 'Product 1', price: 10.00, quantity: 100, category: 'Category A' },
+            { id: 2, name: 'Product 2', price: 15.00, quantity: 50, category: 'Category B' },
+            { id: 3, name: 'Product 3', price: 20.00, quantity: 200, category: 'Category A' },
+            { id: 4, name: 'Product 4', price: 25.00, quantity: 150, category: 'Category B' },
+            { id: 5, name: 'Product 5', price: 30.00, quantity: 80, category: 'Category C' },
+            { id: 6, name: 'Product 6', price: 35.00, quantity: 60, category: 'Category C' }
+        ];
+
+        let selectedProduct = null; // To store the product being added
+
+        // Function to render products based on category filter
+        function renderProducts(categoryFilter = 'all') {
+            const productTableBody = document.querySelector('#products-table tbody');
+            productTableBody.innerHTML = '';
+
+            const filteredProducts = categoryFilter === 'all' 
+                ? products 
+                : products.filter(product => product.category === categoryFilter);
+
+            filteredProducts.forEach(product => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${product.id}</td>
+                    <td>${product.name}</td>
+                    <td>Rs.${product.price.toFixed(2)}</td>
+                    <td>${product.quantity}</td>
+                    <td>${product.category}</td>
+                    <td><button onclick="addToCart(${product.id})">Add to Cart</button></td>
+                `;
+                productTableBody.appendChild(row);
+            });
+        }
+
+        // Event listener for category dropdown change
+        document.getElementById('category-select').addEventListener('change', function() {
+            renderProducts(this.value); // Re-render products based on the selected category
+        });
+
+        // Add to cart with modal popup
+        function addToCart(productId) {
+            selectedProduct = products.find(p => p.id === productId);
+            if (selectedProduct) {
+                const modal = document.getElementById('quantity-modal');
+                document.getElementById('modal-product-name').textContent = 
+                    `Product: ${selectedProduct.name} (Available: ${selectedProduct.quantity})`;
+                document.getElementById('modal-quantity-input').value = '';
+                modal.style.display = 'block';
+            }
+        }
+
+        // Modal event listeners
+        document.getElementById('close-modal').onclick = function() {
+            document.getElementById('quantity-modal').style.display = 'none';
+        };
+
+        document.getElementById('modal-add-to-cart-btn').onclick = function() {
+            const quantity = parseInt(document.getElementById('modal-quantity-input').value, 10);
+            if (quantity && quantity > 0 && quantity <= selectedProduct.quantity) {
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                const existingProduct = cart.find(item => item.product.id === selectedProduct.id);
+
+                if (existingProduct) {
+                    existingProduct.quantity += quantity;
+                } else {
+                    cart.push({ product: selectedProduct, quantity });
+                }
+
+                localStorage.setItem('cart', JSON.stringify(cart));
+                alert(`${quantity} of ${selectedProduct.name} added to your cart!`);
+                document.getElementById('quantity-modal').style.display = 'none';
+            } else {
+                alert('Invalid quantity! Please enter a valid number within the available stock.');
+            }
+        };
+
+        window.onclick = function(event) {
+            if (event.target === document.getElementById('quantity-modal')) {
+                document.getElementById('quantity-modal').style.display = 'none';
+            }
+        };
+
+        // Initial render of all products
+        renderProducts();
+    </script>
+</body>
+</html>
