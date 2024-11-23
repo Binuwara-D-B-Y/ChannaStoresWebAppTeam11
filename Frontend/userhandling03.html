@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Operations</title>
+    <link rel="stylesheet" href="styles.css">
+   <!-- <style>
+        .notification {
+            color: red;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .confirmation-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none; /* Hidden by default */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .confirmation-modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .confirmation-modal button {
+            margin: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+    </style> -->
+</head>
+<body>
+    <header>
+        <nav>
+            <ul class="tabs">
+                <li class="store-name">Channa Stores</li>
+                <li><a href="userhandling03,html" class="tab active">Users</a>
+                <li><a href="Adproducts.html" class="tab">Products</a></li>
+                <li><a href="Adprofile.html" class="tab">Profile</a></li>
+                <li class="signout-tab"><a href="login.html" class="tab">Sign Out</a></li>
+            </ul>
+        </nav>
+
+
+        <h1> &nbsp; Account Management </h1>
+    </header>
+
+    <main>
+    
+        <!-- Add New Account Form -->
+        <section id="add-account">
+            <h3>Add New Account</h3>
+            <form id="add-account-form">
+                <label for="account-name">Account Name:</label>
+                <input type="text" id="account-name" required>
+    
+                <label for="account-email">Email:</label>
+                <input type="email" id="account-email" required>
+    
+                <label for="account-password">Password:</label>
+                <input type="password" id="account-password" required>
+    
+                <label for="account-role">Role:</label>
+                <input type="text" id="account-role" required>
+    
+                <label for="account-phoneNo">Phone No:</label>
+                <input type="text" id="account-phoneNo" required>
+    
+                <label for="account-company">Company:</label>
+                <input type="text" id="account-company" required>
+    
+                <label for="account-address">Address:</label>
+                <input type="text" id="account-address" required>
+    
+                <button type="button" onclick="addAccount()">Add Account</button>
+            </form>
+            <div id="add-notification" class="notification"></div>
+        </section>
+    
+        <!-- Update Account Form -->
+        <section id="update-account">
+            <h3>Update Account</h3>
+            <form id="update-account-form">
+                <label for="search-update">Search by ID or Name:</label>
+                <input type="text" id="search-update" placeholder="Enter ID or Name">
+                <button type="button" onclick="searchAccounts('update')">Search</button>
+                <div id="update-notification" class="notification"></div>
+    
+                <h4>Edit Account</h4>
+                <label for="update-id">ID:</label>
+                <input type="text" id="update-id" disabled>
+    
+                <label for="update-name">Account Name:</label>
+                <input type="text" id="update-name">
+    
+                <label for="update-email">Email:</label>
+                <input type="email" id="update-email">
+    
+                <label for="update-password">Password:</label>
+                <input type="password" id="update-password">
+    
+                <label for="update-role">Role:</label>
+                <input type="text" id="update-role">
+    
+                <label for="update-phoneNo">Phone No:</label>
+                <input type="text" id="update-phoneNo">
+    
+                <label for="update-company">Company:</label>
+                <input type="text" id="update-company">
+    
+                <label for="update-address">Address:</label>
+                <input type="text" id="update-address">
+    
+                <button type="button" onclick="updateAccount()">Update Account</button>
+            </form>
+        </section>
+    
+        <!-- Delete Account Form -->
+        <section id="delete-account">
+            <h3>Delete Account</h3>
+            <form id="delete-account-form">
+                <label for="delete-search">Search by ID, Role, Email, or Company:</label>
+                <input type="text" id="delete-search" placeholder="Enter ID, Role, Email, or Company">
+                <button type="button" onclick="searchAccounts('delete')">Search</button>
+                <div id="delete-notification" class="notification"></div>
+            </form>
+        </section>
+    
+        <!-- Account List Table -->
+        <section id="account-list">
+            <h3>Account List</h3>
+            <table id="account-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Password</th>
+                        <th>Role</th>
+                        <th>Phone No</th>
+                        <th>Company</th>
+                        <th>Address</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dynamically populated rows -->
+                </tbody>
+            </table>
+        </section>
+    
+        <!-- Confirmation Modal -->
+        <div id="confirmation-modal" class="confirmation-modal">
+            <div class="confirmation-modal-content">
+                <p>Are you sure you want to delete this account?</p>
+                <button onclick="confirmDelete()">Yes</button>
+                <button onclick="closeModal()">No</button>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+    // (to be replaced by actual DB integration)
+        
+    // Function to render accounts in the table
+    function renderAccounts(filteredAccounts = accounts) {
+        const tableBody = document.querySelector("#account-table tbody");
+        tableBody.innerHTML = "";
+        filteredAccounts.forEach((account) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${account.id}</td>
+                <td>${account.name}</td>
+                <td>${account.email}</td>
+                <td>${account.password}</td>
+                <td>${account.role}</td>
+                <td>${account.phoneNo}</td>
+                <td>${account.company}</td>
+                <td>${account.address}</td>
+                <td>
+                    <button onclick="editAccount(${account.id})">Edit</button>
+                    <button onclick="showDeleteModal(${account.id})">Delete</button>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+    
+    // Function to add a new account
+    function addAccount() {
+        const name = document.getElementById("account-name").value.trim();
+        const email = document.getElementById("account-email").value.trim().toLowerCase();
+        const password = document.getElementById("account-password").value.trim();
+        const role = document.getElementById("account-role").value.trim();
+        const phoneNo = document.getElementById("account-phoneNo").value.trim();
+        const company = document.getElementById("account-company").value.trim();
+        const address = document.getElementById("account-address").value.trim();
+    
+        // Check for duplicate email
+        const emailExists = accounts.some(account => account.email === email);
+        if (emailExists) {
+            document.getElementById("add-notification").textContent = "Email already exists. Please use a different email.";
+            return;
+        } else {
+            document.getElementById("add-notification").textContent = "";
+        }
+    
+        if (name && email && password && role && phoneNo && company && address) {
+            const newAccount = {
+                id: accounts.length > 0 ? accounts[accounts.length - 1].id + 1 : 1, // Incremental ID
+                name,
+                email,
+                password,
+                role,
+                phoneNo,
+                company,
+                address,
+            };
+            accounts.push(newAccount);
+            renderAccounts();
+            alert("Account added successfully!");
+    
+            // TODO: Database integration to save the account
+            // Example:
+            // fetch('/api/accounts', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify(newAccount)
+            // }).then(response => response.json())
+            //   .then(data => console.log('Account saved to DB:', data))
+            //   .catch(error => console.error('Error:', error));
+    
+            // Reset the form
+            document.getElementById("add-account-form").reset();
+        } else {
+            alert("Please fill in all fields.");
+        }
+    }
+    
+    // Function to edit an account (pre-fill the update form)
+    function editAccount(accountId) {
+        const account = accounts.find(acc => acc.id === accountId);
+        if (account) {
+            document.getElementById("update-id").value = account.id;
+            document.getElementById("update-name").value = account.name;
+            document.getElementById("update-email").value = account.email;
+            document.getElementById("update-password").value = account.password;
+            document.getElementById("update-role").value = account.role;
+            document.getElementById("update-phoneNo").value = account.phoneNo;
+            document.getElementById("update-company").value = account.company;
+            document.getElementById("update-address").value = account.address;
+    
+            // Scroll to update section for better user experience
+            document.getElementById("update-account").scrollIntoView({ behavior: 'smooth' });
+        } else {
+            alert("Account not found.");
+        }
+    }
+    
+    // Function to update an account
+    function updateAccount() {
+        const id = parseInt(document.getElementById("update-id").value);
+        const name = document.getElementById("update-name").value.trim();
+        const email = document.getElementById("update-email").value.trim().toLowerCase();
+        const password = document.getElementById("update-password").value.trim();
+        const role = document.getElementById("update-role").value.trim();
+        const phoneNo = document.getElementById("update-phoneNo").value.trim();
+        const company = document.getElementById("update-company").value.trim();
+        const address = document.getElementById("update-address").value.trim();
+    
+        const accountIndex = accounts.findIndex(acc => acc.id === id);
+        if (accountIndex !== -1) {
+            // Check if the updated email is unique (if changed)
+            const emailExists = accounts.some(acc => acc.email === email && acc.id !== id);
+            if (emailExists) {
+                document.getElementById("update-notification").textContent = "Email already exists. Please use a different email.";
+                return;
+            } else {
+                document.getElementById("update-notification").textContent = "";
+            }
+    
+            // Update account details
+            accounts[accountIndex] = {
+                ...accounts[accountIndex],
+                name,
+                email,
+                password,
+                role,
+                phoneNo,
+                company,
+                address,
+            };
+            renderAccounts();
+            alert("Account updated successfully!");
+    
+            // TODO: Database integration to update the account
+            // Example:
+            // fetch(`/api/accounts/${id}`, {
+            //     method: 'PUT',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify(accounts[accountIndex])
+            // }).then(response => response.json())
+            //   .then(data => console.log('Account updated in DB:', data))
+            //   .catch(error => console.error('Error:', error));
+    
+            // Reset the update form
+            document.getElementById("update-account-form").reset();
+            document.getElementById("update-id").value = "";
+        } else {
+            alert("Account not found.");
+        }
+    }
+    
+    // Function to search accounts for update or delete
+    function searchAccounts(action) {
+        let searchValue = "";
+        if (action === 'update') {
+            searchValue = document.getElementById("search-update").value.trim().toLowerCase();
+        } else if (action === 'delete') {
+            searchValue = document.getElementById("delete-search").value.trim().toLowerCase();
+        }
+    
+        if (!searchValue) {
+            alert("Please enter a search value.");
+            return;
+        }
+    
+        let filteredAccounts = [];
+        if (action === 'update') {
+            filteredAccounts = accounts.filter(acc =>
+                acc.id.toString().includes(searchValue) ||
+                acc.name.toLowerCase().includes(searchValue)
+            );
+    
+            if (filteredAccounts.length === 0) {
+                document.getElementById("update-notification").textContent = "Account does not exist.";
+            } else {
+                document.getElementById("update-notification").textContent = "";
+                renderAccounts(filteredAccounts);
+            }
+        } else if (action === 'delete') {
+            filteredAccounts = accounts.filter(acc =>
+                acc.id.toString().includes(searchValue) ||
+                acc.role.toLowerCase().includes(searchValue) ||
+                acc.email.toLowerCase().includes(searchValue) ||
+                acc.company.toLowerCase().includes(searchValue)
+            );
+    
+            if (filteredAccounts.length === 0) {
+                document.getElementById("delete-notification").textContent = "Account does not exist.";
+            } else {
+                document.getElementById("delete-notification").textContent = "";
+                renderAccounts(filteredAccounts);
+            }
+        }
+    }
+    
+    // Function to show the delete confirmation modal
+    function showDeleteModal(accountId) {
+        deleteId = accountId;
+        document.getElementById("confirmation-modal").style.display = "flex";
+    }
+    
+    // Function to confirm deletion
+    function confirmDelete() {
+        if (deleteId !== null) {
+            accounts = accounts.filter(acc => acc.id !== deleteId);
+            renderAccounts();
+            alert("Account deleted successfully!");
+    
+            deleteId = null;
+            closeModal();
+        }
+    }
+    
+    // Function to close the delete confirmation modal
+    function closeModal() {
+        document.getElementById("confirmation-modal").style.display = "none";
+    }
+    
+    // Prevent adding accounts with duplicate emails
+    // Already handled in addAccount and updateAccount functions
+    
+    // Initial render
+    document.addEventListener("DOMContentLoaded", renderAccounts);
+    </script>
+</body>
+</html>
