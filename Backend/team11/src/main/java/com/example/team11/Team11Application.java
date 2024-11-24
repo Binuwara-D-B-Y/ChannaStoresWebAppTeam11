@@ -1,13 +1,13 @@
-package Team11.ChannaStores;
+package com.example.team11;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ChannaStoresApplication {
+public class Team11Application {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ChannaStoresApplication.class, args);
+		SpringApplication.run(Team11Application.class, args);
 	}
 
 }
