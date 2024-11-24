@@ -24,7 +24,7 @@ public class Supplier {
     private String role;
 
     @Column(name = "phoneNo", nullable = false)
-    private String phoneNo;
+    private int phoneNo;
 
     @Column(name = "company", nullable = false)
     private String company;
@@ -32,7 +32,7 @@ public class Supplier {
     @Column(name = "address", nullable = false)
     private String address;
 
-    // Getters////////////////////////////////////////////////////////////
+    /////Getters////////////////////////////////////////////////////
     public int getId() {return id;}
 
     public String getUsername() {return username;}
@@ -43,7 +43,7 @@ public class Supplier {
 
     public String getRole() {return role;}
 
-    public String getPhoneNo() {return phoneNo;}
+    public int getPhoneNo() {return phoneNo;}
 
     public String getCompany() {return company;}
 
@@ -61,7 +61,7 @@ public class Supplier {
 
     public void setRole(String role){this.role = role;}
 
-    public void setPhoneNo(String phoneNo){this.phoneNo = phoneNo;}
+    public void setPhoneNo(int phoneNo){this.phoneNo = phoneNo;}
 
     public void setCompany(String company){this.company = company;}
 

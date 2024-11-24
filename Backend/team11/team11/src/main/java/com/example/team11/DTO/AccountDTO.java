@@ -1,12 +1,12 @@
 package com.example.team11.DTO;
 
-public class SupplierDTO {
+public class AccountDTO {
     private int id;
     private String username;
     private String email;
     private String password;
     private String role;
-    private int phoneNo;
+    private String phoneNo;
     private String company;
     private String address;
 
@@ -21,7 +21,7 @@ public class SupplierDTO {
 
     public String getRole() {return role;}
 
-    public int getPhoneNo() {return phoneNo;}
+    public String getPhoneNo() {return phoneNo;}
 
     public String getCompany() {return company;}
 
@@ -39,9 +39,10 @@ public class SupplierDTO {
 
     public void setRole(String role){this.role = role;}
 
-    public void setPhoneNo(int phoneNo){this.phoneNo = phoneNo;}
+    public void setPhoneNo(String phoneNo){this.phoneNo = phoneNo;}
 
     public void setCompany(String company){this.company = company;}
 
     public void setAddress(String address){this.address = address;}
 }
+

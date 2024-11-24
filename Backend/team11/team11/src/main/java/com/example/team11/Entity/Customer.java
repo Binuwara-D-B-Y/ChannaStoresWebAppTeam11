@@ -1,14 +1,15 @@
 package com.example.team11.Entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 
+@SuppressWarnings("unused")
 @Entity
 @Table(name = "customer")
 public class Customer {
-    @Id // Primary key
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    @Column(name = "id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(name = "username", nullable = false)
@@ -20,37 +21,36 @@ public class Customer {
     @Column(name = "password", nullable = false)
     private String password;
 
-    // Getters
-    public int getId() {
-        return id;
-    }
+    @Column(name = "role", columnDefinition = "VARCHAR(15) DEFAULT 'Customer'")
+    private String role;
 
-    public String getUsername() {
-        return username;
-    }
+    @Column(name = "phone_no", nullable = true)
+    private Integer phoneNo;
 
-    public String getEmail() {
-        return email;
-    }
+    /////Getters////////////////////////////////////////////////////
+    public int getId() {return id;}
 
-    public String getPassword() {
-        return password;
-    }
+    public String getUsername() {return username;}
 
-    // Setters
-    public void setId(int id) {
-        this.id = id;
-    }
+    public String getEmail() {return email;}
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    public String getPassword() {return password;}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    public String getRole() {return role;}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    public int getPhoneNo() {return phoneNo;}
+
+    // Setters///////////////////////////////////////////////////////////////
+
+    public void setId(int id) {this.id = id;}
+
+    public void setUsername(String username) {this.username = username;}
+
+    public void setEmail(String email) {this.email = email;}
+
+    public void setPassword(String password) {this.password = password;}
+
+    public void setRole(String role){this.role = role;}
+
+    public void setPhoneNo(int phoneNo){this.phoneNo = phoneNo;}
 }
