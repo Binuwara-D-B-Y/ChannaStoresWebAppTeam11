@@ -27,13 +27,13 @@
         <!-- Update Profile Form -->
         <form id="update-profile-form">
             <label for="name">Name:</label>
-            <input type="text" id="name" value="John Doe" required><br><br>
+            <input type="text" id="name" value="Shenon" required><br><br>
 
             <label for="email">Email:</label>
-            <input type="email" id="email" value="john@example.com" required><br><br>
+            <input type="email" id="email" value="shen@gmail.com" required><br><br>
 
             <label for="phone">Phone:</label>
-            <input type="text" id="phone" value="123-456-7890"><br><br>
+            <input type="text" id="phone" value="0774567890"><br><br>
 
             <button type="submit">Update Profile</button>
         </form>
@@ -69,7 +69,7 @@
 
     <script>
         window.onload = function () {
-            // Retrieve the user data from localStorage
+            // Get the user data from localStorage
             const userData = JSON.parse(localStorage.getItem('userData'));
 
             if (userData) {
@@ -84,7 +84,7 @@
                         document.getElementById('name').value = data.user.username || '';
                         document.getElementById('email').value = data.user.email || '';
                         document.getElementById('phone').value = data.phoneNumber || '';
-                        document.getElementById('current-password').value = data.phoneNumber || '';
+                        document.getElementById('current-password').value = data.password || '';
 
                         console.log('User data loaded from API:', data);
                     })
@@ -116,7 +116,7 @@
                 const updatedData = {
                     username: name,
                     email: email,
-                    password: "securepassword123", // Example password, adjust as needed
+                    password: "abc123", // Example password
                     phoneNumber: phone,
                 };
 
@@ -190,6 +190,8 @@
                     .then((data) => {
                         alert('Password updated successfully!');
                         console.log(data);
+                        window.location.href = 'login.html'; // Redirect to login page after account deletion
+
                     })
                     .catch((error) => {
                         alert('Error updating password!');
