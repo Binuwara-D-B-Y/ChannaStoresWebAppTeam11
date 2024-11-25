@@ -1,0 +1,144 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul class="tabs">
+                <li class="store-name">Channa Stores</li> 
+                <li><a href="products.html" class="tab active">Products</a></li>
+                <li><a href="cart.html" class="tab">Cart</a></li>
+                <li><a href="orders.html" class="tab">Orders</a></li>
+                <li><a href="profile.html" class="tab">Profile</a></li>
+                <li class="signout-tab"><a href="login.html" class="tab">Sign Out</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Product Catalog</h2>
+
+        <!-- Category Filter Dropdown -->
+        <section id="category-filter">
+            <label for="category-select">Filter by Category:</label>
+            <select id="category-select">
+                <option value="all">All Categories</option>
+                <option value="Dairy">Dairy</option>
+                <option value="Herbs & Spices">Herbs & Spices</option>
+                <option value="Meat & Seafood">Meat & Seafood</option>
+                <option value="Bakery & Bread">Bakery & Bread</option>
+                <option value="Pantry Staples">Pantry Staples</option>
+                <option value="Snacks & Beverages">Snacks & Beverages</option>
+                <option value="Frozen Foods">Frozen Foods</option>
+                <option value="Health & Beauty care">Health & Beauty care</option>
+                <option value="Beverages">Beverages</option>
+                <option value="Stationary">Stationary</option> 
+            </select>
+        </section>
+
+        <!-- Product List Table -->
+        <section id="product-list">
+            <h3>Product List</h3>
+            <table id="products-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Stock Quantity</th>
+                        <th>Category</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dynamically populated product rows will go here -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Shop Management System</p>
+    </footer>
+
+    <script>
+        // Sample product data (with categories)
+        const products = [
+        { id: 1, name: 'Promate CR 40pgs', price: 180.00, quantity: 50, category: 'Stationary' },
+            { id: 2, name: 'Atlas Chooty pen', price: 25.00, quantity: 85, category: 'Stationary' },
+            { id: 3, name: 'Kumarika Shampoo', price: 270.00, quantity: 20, category: 'Health & Beauty care' },
+            { id: 4, name: 'Sprite 1.5ltrs', price: 370.00, quantity: 50, category: 'Beverages' },
+            { id: 5, name: 'Coca Cola 500ml', price: 150.00, quantity: 100, category: 'Beverages' },
+            { id: 6, name: 'magic Heavenly- Cheesecake and blueberry', price: 150.00, quantity: 60, category: 'Frozen Foods' }
+        ];
+
+        // Function to render products based on category filter
+        function renderProducts(categoryFilter = 'all') {
+            const productTableBody = document.querySelector('#products-table tbody');
+            productTableBody.innerHTML = '';
+
+            // Filter products by category if a category is selected
+            const filteredProducts = categoryFilter === 'all' 
+                ? products 
+                : products.filter(product => product.category === categoryFilter);
+
+            // Add filtered products to the table
+            filteredProducts.forEach(product => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${product.id}</td>
+                    <td>${product.name}</td>
+                    <td>Rs.${product.price.toFixed(2)}</td>
+                    <td>${product.quantity}</td>
+                    <td>${product.category}</td>
+                    <td><button onclick="addToCart(${product.id})">Add to Cart</button></td>
+                `;
+                productTableBody.appendChild(row);
+            });
+        }
+
+        // Event listener for category dropdown change
+        document.getElementById('category-select').addEventListener('change', function() {
+            const selectedCategory = this.value;
+            renderProducts(selectedCategory); // Re-render products based on the selected category
+        });
+
+        // Function to handle adding products to cart
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (product) {
+                const quantity = prompt(`Enter the quantity for ${product.name} (Available: ${product.quantity}):`);
+                if (quantity && !isNaN(quantity) && quantity > 0 && quantity <= product.quantity) {
+                    // Get the cart from localStorage (or initialize an empty cart if not available)
+                    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+                    // Check if the product is already in the cart
+                    const existingProduct = cart.find(item => item.product.id === product.id);
+                    if (existingProduct) {
+                        existingProduct.quantity += parseInt(quantity); // Update quantity if already in cart
+                    } else {
+                        cart.push({ product: product, quantity: parseInt(quantity) }); // Add new product to cart
+                    }
+
+                    // Save the updated cart to localStorage
+                    localStorage.setItem('cart', JSON.stringify(cart));
+
+                    // Confirmation alert
+                    alert(`${quantity} of ${product.name} added to your cart!`);
+                } else {
+                    alert("Invalid quantity! Please enter a valid number within the available stock.");
+                }
+            }
+        }
+
+        // Initial render of all products
+        renderProducts();
+    </script>
+</body>
+</html>
