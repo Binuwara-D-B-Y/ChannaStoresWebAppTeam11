@@ -1,69 +1,65 @@
 package com.example.team11.Entity;
 
-
 import jakarta.persistence.*;
+
 @Entity
-@Table(name = "Supplier")
+@Table(name = "suppliers")
 public class Supplier {
-    @Id // Primary key
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    private Long id; // User's ID, FK
 
-    @Column(name = "id")
-    private int id;
+    @OneToOne(cascade = CascadeType.ALL)
+    @MapsId
+    @JoinColumn(name = "id") // FK to users.id
+    private User user;
 
-    @Column(name = "username", nullable = false)
-    private String username;
-
-    @Column(name = "email", nullable = false, unique = true)
-    private String email;
-
-    @Column(name = "password", nullable = false)
-    private String password;
-
-    @Column(name = "role", nullable = false)
-    private String role;
-
-    @Column(name = "phoneNo", nullable = false)
-    private int phoneNo;
-
-    @Column(name = "company", nullable = false)
+    @Column(nullable = false)
     private String company;
 
-    @Column(name = "address", nullable = false)
+    @Column(nullable = false)
     private String address;
 
-    /////Getters////////////////////////////////////////////////////
-    public int getId() {return id;}
+    @Column(name = "phone_number")
+    private String phoneNumber;
 
-    public String getUsername() {return username;}
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
 
-    public String getEmail() {return email;}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getPassword() {return password;}
+    public User getUser() {
+        return user;
+    }
 
-    public String getRole() {return role;}
+    public void setUser(User user) {
+        this.user = user;
+    }
 
-    public int getPhoneNo() {return phoneNo;}
+    public String getCompany() {
+        return company;
+    }
 
-    public String getCompany() {return company;}
+    public void setCompany(String company) {
+        this.company = company;
+    }
 
-    public String getAddress() {return address;}
+    public String getAddress() {
+        return address;
+    }
 
-    // Setters///////////////////////////////////////////////////////////////
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
-    public void setId(int id) {this.id = id;}
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
 
-    public void setUsername(String username) {this.username = username;}
-
-    public void setEmail(String email) {this.email = email;}
-
-    public void setPassword(String password) {this.password = password;}
-
-    public void setRole(String role){this.role = role;}
-
-    public void setPhoneNo(int phoneNo){this.phoneNo = phoneNo;}
-
-    public void setCompany(String company){this.company = company;}
-
-    public void setAddress(String address){this.address = address;}
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 }

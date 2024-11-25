@@ -1,9 +1,8 @@
 package com.example.team11.Repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import com.example.team11.Entity.Supplier;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface SupplierRepository extends JpaRepository<Supplier, Integer> {
-
-    Supplier findByEmail(String email);
+public interface SupplierRepository extends JpaRepository<Supplier, Long> {
+    Supplier findByUserEmail(String email);
 }
