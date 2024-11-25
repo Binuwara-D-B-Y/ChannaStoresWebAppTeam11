@@ -43,9 +43,9 @@
             console.log(JSON.stringify({ email, password }))
 
             try {
-                // 1. Fetch user data using email or email
+                // Fetch user data using email and password
                 const userResponse = await fetch('http://localhost:8080/api/users/login', {
-                    method: 'POST', // Change to POST for login
+                    method: 'POST', 
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
                 });
@@ -58,7 +58,7 @@
 
                 console.log(user)
 
-                // 2. Check user role and redirect accordingly (replace with server-side logic for enhanced security)
+                // Check user role and redirect accordingly (replace with server-side logic for enhanced security)
                 if (!user.role) {
                     throw new Error('Invalid user role'); // Handle invalid role
                 }
@@ -79,7 +79,7 @@
                         throw new Error('Invalid user role'); // Handle unexpected role
                 }
             } catch (error) {
-                alert(`Error: ${error.message}`); // Display user-friendly error message
+                alert(`Error: ${error.message}`); // Display error message
             }
         });
     </script>

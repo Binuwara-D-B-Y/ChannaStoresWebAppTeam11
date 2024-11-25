@@ -54,7 +54,7 @@
 
 
             try {
-                // Step 1: Create User
+                // Create user(in here only customer accounts will be created)
                 const userResponse = await fetch('http://localhost:8080/api/users', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -67,10 +67,10 @@
                     throw new Error("Failed to create user");
                 }
 
-                const user = await userResponse.json(); // Assuming the API returns the user data with an ID
+                const user = await userResponse.json(); // API returns the user data with an ID
                 const userId = user.id;
 
-                // Step 2: Create Customer
+                // Create Customer
                 const customerResponse = await fetch(`http://localhost:8080/api/customers`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
