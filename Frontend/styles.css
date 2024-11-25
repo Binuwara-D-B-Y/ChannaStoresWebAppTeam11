@@ -141,29 +141,6 @@ button:hover {
     background-color: #0056b3;
 }
 
-
-
-delete-account-button {
-    background-color: rgb(235, 64, 64);
-    color: white;
-    border: none;
-    padding: 6px 15px;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-delete-account-button:hover {
-    background-color: #e60000;
-}
-
-
-
-
-
-
-
-
-
 /* Table Styling */
 table {
     width: 100%;
