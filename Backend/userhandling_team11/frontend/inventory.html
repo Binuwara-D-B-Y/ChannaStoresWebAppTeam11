@@ -43,9 +43,14 @@
 
                 <label for="product-category">Category:</label>
                 <select id="product-category" required>
-                    <option value="Category A">Category A</option>
-                    <option value="Category B">Category B</option>
-                    <option value="Category C">Category C</option>
+                        <option value="all">All</option>
+                        <option value="Beverages">Beverage</option>
+                        <option value="Dairy">Dairy</option>
+                        <option value="Bakery">Bakery</option>
+                        <option value="Staples">Staples</option>
+                        <option value="Snacks">Snacks</option>
+                        <option value="Health">Health</option>
+                        <option value="Household">Household</option>
                 </select>
 
                 <button type="submit">Add Product</button>
@@ -70,9 +75,14 @@
 
                 <label for="update-product-category">Category:</label>
                 <select id="update-product-category">
-                    <option value="Category A">Category A</option>
-                    <option value="Category B">Category B</option>
-                    <option value="Category C">Category C</option>
+                        <option value="all">All</option>
+                        <option value="Beverages">Beverage</option>
+                        <option value="Dairy">Dairy</option>
+                        <option value="Bakery">Bakery</option>
+                        <option value="Staples">Staples</option>
+                        <option value="Snacks">Snacks</option>
+                        <option value="Health">Health</option>
+                        <option value="Household">Household</option>
                 </select>
 
                 <button type="submit">Update Product</button>
@@ -168,6 +178,13 @@
             const newProductQuantity = parseInt(document.getElementById('product-quantity').value);
             const newProductCategory = document.getElementById('product-category').value;
 
+
+            if (!isProductIdUnique(newProductId)) {
+                alert(`Product ID ${newProductId} is already in use. Please use a unique ID.`);
+                return;
+            }
+
+            
             const newProduct = {
                 id: newProductId,
                 name: newProductName,
