@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRUD Operations</title>
+    <title>User handling</title>
     <link rel="stylesheet" href="styles.css">
     <style>
         .notification {
@@ -60,7 +60,7 @@
     <main>
         <h2>User Management</h2>
 
-        <!-- add New Account Form -->
+        <!-- Add New Account Form -->
         <section id="add-account">
             <h3>Add New Account</h3>
             <form id="add-account-form" onsubmit="event.preventDefault(); addAccount(event)">
@@ -74,7 +74,10 @@
                 <input type="password" id="account-password" required>
 
                 <label for="account-role">Role:</label>
-                <input type="text" id="account-role" required>
+                <select id="account-role" required>
+                    <option value="supplier">Supplier</option>
+                    <option value="admin">Admin</option>
+                </select>
 
                 <label for="account-phoneNo">Phone No:</label>
                 <input type="text" id="account-phoneNo" required>
@@ -91,9 +94,9 @@
             <div id="add-notification" class="notification"></div>
         </section>
 
-        <!-- update Account Form -->
+        <!-- Update Account Form -->
         <section id="update-account">
-            <h3>Update Account</h3>
+            <h3>Search Account</h3>
             <form id="update-account-form" onsubmit="event.preventDefault(); updateAccount();">
                 <label for="search-update">Search by ID or Name:</label>
                 <input type="text" id="search-update" placeholder="Enter ID or Name">
@@ -114,8 +117,14 @@
                 <label for="update-password">Password:</label>
                 <input required type="password" id="update-password">
 
+
                 <label for="update-role">Role:</label>
-                <input required type="text" id="update-role">
+                <select id="update-role" required>
+                    <option value="supplier">Supplier</option>
+                    <option value="customer">Customer</option>
+                    <option value="admin">Admin</option>
+                </select>
+
 
                 <label for="update-phoneNo">Phone No:</label>
                 <input required type="text" id="update-phoneNo">
@@ -131,7 +140,7 @@
 
         </section>
 
-        <!-- delete Account Form -->
+        <!-- Delete Account Form -->
         <section id="delete-account">
             <h3>Delete Account</h3>
             <form id="delete-account-form">
@@ -143,7 +152,7 @@
             </form>
         </section>
 
-        <!-- account List Table -->
+        <!-- Account List Table -->
         <section id="account-list">
             <h3>Account List</h3>
             <table id="account-table">
@@ -161,12 +170,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- dynamically populated rows -->
+                    <!-- Dynamically populated rows -->
                 </tbody>
             </table>
         </section>
 
-        <!-- confirmation Modal -->
+        <!-- Confirmation Modal -->
         <div id="confirmation-modal" class="confirmation-modal">
             <div class="confirmation-modal-content">
                 <p>Are you sure you want to delete this account?</p>
@@ -175,11 +184,15 @@
             </div>
         </div>
     </main>
+    <footer>
+        <p>&copy; 2024 Shop Management System</p>
+    </footer>
 
     <script>
 
+
         let accounts = [];
-        // displaying account list
+        
         async function loadAccounts() {
             const customerResponse = await fetch('http://localhost:8080/api/customers');
             const supplierResponse = await fetch('http://localhost:8080/api/suppliers');
@@ -188,17 +201,17 @@
                 const customers = await customerResponse.json();
                 const suppliers = await supplierResponse.json();
 
-                // merge to display customers and suppliers
+                // Merge customers and suppliers and normalize data
                 accounts = [
                     ...customers.map(customer => ({
                         ...customer,
-                        company: 'N/A',  // default value for customers
-                        address: 'N/A',  // default value for customers
+                        company: 'N/A',  // Default value for customers
+                        address: 'N/A',  // Default value for customers
                     })),
-                    ...suppliers
+                    ...suppliers  // Suppliers already have company and address
                 ];
 
-                // render the accounts in the table
+                // Render the accounts in the table
                 console.log(accounts);
                 renderAccounts(accounts);
             } else {
@@ -208,15 +221,15 @@
 
         loadAccounts();
 
-        // function to render accounts in the table
+        // Function to render accounts in the table
         function renderAccounts(filteredAccounts = []) {
             const tableBody = document.querySelector("#account-table tbody");
             tableBody.innerHTML = "";
 
-            // check if filteredAccounts is an array
+            // Check if filteredAccounts is an array
             if (!Array.isArray(filteredAccounts)) {
                 console.error("Expected an array, but received:", filteredAccounts);
-                return;  // exit function if not an array
+                return;  // Exit the function if not an array
             }
 
             filteredAccounts.forEach(account => {
@@ -240,7 +253,7 @@
         }
 
 
-        // function to add new account
+        // Function to add a new account
         function addAccount() {
             const name = document.getElementById("account-name").value.trim();
             const email = document.getElementById("account-email").value.trim().toLowerCase();
@@ -250,7 +263,7 @@
             const company = document.getElementById("account-company").value.trim();
             const address = document.getElementById("account-address").value.trim();
 
-            // check duplicate email (local check)
+            // Check for duplicate email 
             const emailExists = accounts.some(account => account.email === email);
             if (emailExists) {
                 document.getElementById("add-notification").textContent = "Email already exists. Please use a different email.";
@@ -259,9 +272,9 @@
                 document.getElementById("add-notification").textContent = "";
             }
 
-            // check if all fields are filled
+            // Validate if all fields are filled
             if (name && email && password && role && phoneNo && company && address) {
-                // create user via the API
+                // Step 1: Create user via the API
                 const userPayload = {
                     username: name,
                     email: email,
@@ -269,7 +282,7 @@
                     role: role
                 };
 
-                // calling user API to create a user
+                // Call the user API to create a user
                 fetch('http://localhost:8080/api/users', {
                     method: 'POST',
                     headers: {
@@ -280,7 +293,7 @@
                     .then(response => response.json())
                     .then(userData => {
                         console.log(userData)
-                        // step 2: If user creation is success, get user ID and create the supplier
+                        // Step 2: If the user creation is successful, get the user ID and create the supplier
                         const userId = userData.id;
                         const supplierPayload = {
                             userId: userId,
@@ -291,7 +304,7 @@
 
                         console.log(supplierPayload)
 
-                        // call supplier API to create supplier
+                        // Call the supplier API to create a supplier
                         return fetch('http://localhost:8080/api/suppliers', {
                             method: 'POST',
                             headers: {
@@ -308,44 +321,46 @@
                         }
                     })
                     .then(supplierData => {
-                        // show success and reload the page
+                        // After both user and supplier are created, show success and reload the page
                         alert("Account added successfully!");
-                        
+                        // re-render accounts or reload the page
                         window.location.reload(); // This will reload the page
                     })
                     .catch(error => {
-                        // handle any errors occur during user or supplier create
+                        // Handle any errors that occur during the user or supplier creation
                         console.error('Error during account creation:', error);
                         alert("There was an error creating the account. Please try again.");
                     });
 
-                // reset the form
+                // Reset the form
                 document.getElementById("add-account-form").reset();
             } else {
                 alert("Please fill in all fields.");
             }
         }
 
-        // function to edit an account
+
+        // Function to edit an account (pre-fill the update form)
         function editAccount(accountId) {
             const account = accounts.find(acc => acc.id === accountId);
 
             if (account) {
-                // pre-fill the update form fields
+                // Pre-fill the update form fields with the account data
                 document.getElementById("update-id").value = account.id;
                 document.getElementById("update-name").value = account.user.username;  
                 document.getElementById("update-email").value = account.user.email;
-                document.getElementById("update-password").value = account.user.password || '';  // default empty if not available
+                document.getElementById("update-password").value = account.user.password || '';  // Default to empty if not available
                 document.getElementById("update-role").value = account.user.role;
-                document.getElementById("update-phoneNo").value = account.phoneNumber || '';  // default empty if not available
-                document.getElementById("update-company").value = account.company || '';  // default empty if not available
-                document.getElementById("update-address").value = account.address || '';  // default empty if not available
+                document.getElementById("update-phoneNo").value = account.phoneNumber || '';  // Default to empty if not available
+                document.getElementById("update-company").value = account.company || '';  // Default to empty if not available
+                document.getElementById("update-address").value = account.address || '';  // Default to empty if not available
             } else {
                 console.error("Account not found");
             }
         }
 
-        // function to update account
+
+        // Function to update an account
         function updateAccount() {
             const id = parseInt(document.getElementById("update-id").value);
             const name = document.getElementById("update-name").value.trim();
@@ -358,7 +373,7 @@
 
             const accountIndex = accounts.findIndex(acc => acc.id === id);
             if (accountIndex !== -1) {
-                // check the updated email is unique
+                // Check if the updated email is unique (if changed)
                 const emailExists = accounts.some(acc => acc.email === email && acc.id !== id);
                 if (emailExists) {
                     document.getElementById("update-notification").textContent = "Email already exists. Please use a different email.";
@@ -367,13 +382,13 @@
                     document.getElementById("update-notification").textContent = "";
                 }
 
-                // check if role is 'supplier'
+                // Check if the role is 'supplier'
                 if (role !== 'supplier') {
                     alert("Only suppliers can be updated.");
                     return;
                 }
 
-                // update account details in local state
+                // Update account details in the local state
                 const updatedAccount = {
                     ...accounts[accountIndex],
                     name,
@@ -385,7 +400,7 @@
                     address,
                 };
 
-                // send PUT request to update the supplier
+                // Send PUT request to the server to update the supplier account
                 const apiEndpoint = `http://localhost:8080/api/suppliers/${id}`;
 
                 fetch(apiEndpoint, {
@@ -403,32 +418,33 @@
                     }),
                 })
                     .then(response => {
-                        // log entire response to inspect it
+                        // Log the entire response to inspect it
                         console.log("Response Object:", response);
 
-                        // check response status
-                        if (response.ok) { 
-                            // if request successful (status 200-299)
-                            return response.json();
+                        // Check the response status code to determine success
+                        if (response.ok) {  // If the status code is in the range 200-299
+                            // If the request was successful (status 200-299)
+                            return response.json();  // Parse the response body as JSON
                         } else {
                             throw new Error(`Failed with status: ${response.status}`);
                         }
                     })
                     .then(data => {
-                        // handle parsed JSON data, if necessary
+                        // Handle the parsed JSON data, if necessary
                         console.log("Response Data:", data);
 
-                        // updating local list if API request was success
+                        // Update the local list if the API request was successful
                         accounts[accountIndex] = updatedAccount;
-                        renderAccounts();
+                        renderAccounts(); // Re-render the account list
                         alert("Account updated successfully!");
                     })
                     .catch(error => {
+                        // Handle error, which includes non-2xx responses
                         console.error("Error updating account:", error);
                         alert("Error updating account. Please try again.");
                     });
 
-                // reset the update form
+                // Reset the update form
                 document.getElementById("update-account-form").reset();
                 document.getElementById("update-id").value = "";
             } else {
@@ -436,7 +452,12 @@
             }
         }
 
-        // function search accounts to update or delete
+
+
+
+
+
+        // Function to search accounts for update or delete
         function searchAccounts(action) {
             const searchValue = document.getElementById(action === 'update' ? 'search-update' : 'delete-search').value.trim().toLowerCase();
 
@@ -447,15 +468,15 @@
 
             let filteredAccounts = accounts.filter(account => {
                 const accountData = [
-                    account.id.toString(), // account ID
-                    account.user.username.toLowerCase(), // account Name
-                    account.user.email.toLowerCase(), // account Email
-                    account.user.role.toLowerCase(), // account Role
-                    account.phoneNumber ? account.phoneNumber.toLowerCase() : "", // phone number (nullable)
+                    account.id.toString(), // Account ID
+                    account.user.username.toLowerCase(), // Account Name
+                    account.user.email.toLowerCase(), // Account Email
+                    account.user.role.toLowerCase(), // Account Role
+                    account.phoneNumber ? account.phoneNumber.toLowerCase() : "", // Phone number (nullable)
                     account.company.toLowerCase(), // Company
                 ];
 
-                // check if any of fields match the search value
+                // Check if any of the fields match the search value
                 return accountData.some(data => data.includes(searchValue));
             });
 
@@ -465,35 +486,40 @@
                 document.getElementById(`${action}-notification`).textContent = "";
             }
 
-            renderAccounts(filteredAccounts); // render the filtered accounts
+            renderAccounts(filteredAccounts); // Render the filtered accounts
         }
 
         function clearSearch() {
-            // clear the search input fields
-            document.getElementById('search-update').value = '';  // assuming search input for update
-            document.getElementById('delete-search').value = '';  // assuming search input for delete
+            // Clear the search input fields
+            document.getElementById('search-update').value = '';  // Assuming the search input for update
+            document.getElementById('delete-search').value = '';  // Assuming the search input for delete
 
-            // reset notifications to empty
+            // Reset the notifications to empty
             document.getElementById('update-notification').textContent = '';
             document.getElementById('delete-notification').textContent = '';
 
-            // re-render all accounts, calling renderAccounts function with full list
-            renderAccounts(accounts);
+            // Re-render all accounts by calling the renderAccounts function with the full list
+            renderAccounts(accounts);  // Assuming 'accounts' is the full data of all accounts
         }
 
-        // function to confirm deletion
+
+
+
+        // Function to show the delete confirmation modal
+
+        // Function to confirm deletion
         function confirmDelete(deleteId) {
             if (deleteId !== null) {
-                // find account by ID
+                // Find the account by ID
                 const accountToDelete = accounts.find(acc => acc.id === deleteId);
 
-                // check if account exists
+                // Check if the account exists
                 if (!accountToDelete) {
                     alert("Account not found.");
                     return;
                 }
 
-                // choose appropriate API endpoint based on role
+                // Determine the appropriate API endpoint based on the role
                 let apiEndpoint = '';
                 if (accountToDelete.user.role === 'customer') {
                     apiEndpoint = `http://localhost:8080/api/customers/${deleteId}`;
@@ -501,18 +527,20 @@
                     apiEndpoint = `http://localhost:8080/api/suppliers/${deleteId}`;
                 }
 
-                // make API call to delete the account
+                // Make the API call to delete the account
                 fetch(apiEndpoint, {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
-                        }
+                        // Add any necessary authorization headers, e.g., token
+                        // 'Authorization': 'Bearer your_token_here'
+                    }
                 })
                     .then(response => {
                         if (response.ok) {
-                            // Remove account from local list after success API call
+                            // Remove the account from the local list after successful API call
                             accounts = accounts.filter(acc => acc.id !== deleteId);
-                            renderAccounts(); // re-render updated account list
+                            renderAccounts(); // Re-render the updated account list
                             alert("Account deleted successfully!");
                         } else {
                             alert("Failed to delete account.");
@@ -523,16 +551,20 @@
                         alert("Error deleting account. Please try again.");
                     });
 
-                // reset deleteId and close the modal
+                // Reset deleteId and close the modal
                 deleteId = null;
                 closeModal();
             }
         }
 
-        // function to close the delete confirmation modal
+
+        // Function to close the delete confirmation modal
         function closeModal() {
             document.getElementById("confirmation-modal").style.display = "none";
         }
+
+        // Prevent adding accounts with duplicate emails
+        // Already handled in addAccount and updateAccount functions
 
         // Initial render
         document.addEventListener("DOMContentLoaded", renderAccounts);
