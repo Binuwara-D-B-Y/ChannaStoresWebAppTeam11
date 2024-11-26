@@ -10,21 +10,27 @@
     <header>
         <nav>
             <ul class="tabs">
-                <li class="store-name">Channa Stores</li> 
+                <li><a href="index.html" class="tab">Home</a></li>
                 <li><a href="products.html" class="tab">Products</a></li>
                 <li><a href="cart.html" class="tab">Cart</a></li>
-                <li><a href="orders.html" class="tab  active">Orders</a></li>
                 <li><a href="profile.html" class="tab">Profile</a></li>
-                <li class="signout-tab"><a href="login.html" class="tab">Sign Out</a></li>
+                <li><a href="orders.html" class="tab active">Orders</a></li>
+                <li><a href="inventory.html" class="tab">Inventory</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
-        
+        <h2>Order History</h2>
+
+        <!-- Link to Place New Order -->
+        <section id="new-order">
+            <button onclick="window.location.href='place-order.html'">Place New Order</button>
+        </section>
+
         <!-- Order List Table -->
         <section id="order-list">
-            <h2>Orders</h2>
+            <h3>Orders</h3>
             <table id="orders-table">
                 <thead>
                     <tr>
@@ -68,35 +74,51 @@
             }
         ];
 
-        // Function to render the order list (view-only status)
-function renderOrders() {
-    const ordersTableBody = document.querySelector('#orders-table tbody');
-    ordersTableBody.innerHTML = '';
+        // Function to render the order list
+        function renderOrders() {
+            const ordersTableBody = document.querySelector('#orders-table tbody');
+            ordersTableBody.innerHTML = '';
 
-    orders.forEach(order => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${order.id}</td>
-            <td>${order.products.map(p => `${p.name} (x${p.quantity})`).join(', ')}</td>
-            <td>Rs.${order.total.toFixed(2)}</td>
-            <td>${order.status}</td> <!-- Display status as plain text -->
-            <td><button onclick="viewOrder(${order.id})">View</button></td>
-        `;
-        ordersTableBody.appendChild(row);
-    });
-}
+            orders.forEach(order => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${order.id}</td>
+                    <td>${order.products.map(p => `${p.name} (x${p.quantity})`).join(', ')}</td>
+                    <td>Rs.${order.total.toFixed(2)}</td>
+                    <td>
+                        <select id="order-status-${order.id}" onchange="updateOrderStatus(${order.id})">
+                            <option value="Pending" ${order.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                            <option value="Shipped" ${order.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
+                            <option value="Completed" ${order.status === 'Completed' ? 'selected' : ''}>Completed</option>
+                        </select>
+                    </td>
+                    <td><button onclick="viewOrder(${order.id})">View</button></td>
+                `;
+                ordersTableBody.appendChild(row);
+            });
+        }
 
-// Function to view order details
-function viewOrder(orderId) {
-    const order = orders.find(o => o.id === orderId);
-    if (order) {
-        alert(`Order Details:\n\nID: ${order.id}\nProducts: ${order.products.map(p => `${p.name} (x${p.quantity})`).join(', ')}\nTotal: Rs. ${order.total.toFixed(2)}\nStatus: ${order.status}`);
-    }
-}
+        // Function to view order details
+        function viewOrder(orderId) {
+            const order = orders.find(o => o.id === orderId);
+            if (order) {
+                alert(`Order Details:\n\nID: ${order.id}\nProducts: ${order.products.map(p => `${p.name} (x${p.quantity})`).join(', ')}\nTotal: Rs. ${order.total.toFixed(2)}\nStatus: ${order.status}`);
+            }
+        }
 
-// Initial render of the orders
-renderOrders();
+        // Function to update the status of an order
+        function updateOrderStatus(orderId) {
+            const newStatus = document.getElementById(`order-status-${orderId}`).value;
+            const order = orders.find(o => o.id === orderId);
+            if (order) {
+                order.status = newStatus;
+                renderOrders(); // Re-render the orders list to reflect the status update
+                alert(`Order #${orderId} status updated to ${newStatus}`);
+            }
+        }
 
-</script>
+        // Initial render of the orders
+        renderOrders();
+    </script>
 </body>
 </html>
