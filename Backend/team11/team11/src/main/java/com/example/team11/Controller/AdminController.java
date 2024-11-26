@@ -15,13 +15,13 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
-    // get all admins
+    // Get all admins
     @GetMapping
     public List<AdminDTO> getAllAdmins() {
         return adminService.getAllAdmins();
     }
 
-    // get admin by ID
+    // Get a single admin by ID
     @GetMapping("/{id}")
     public AdminDTO getAdminById(@PathVariable Long id) {
         return adminService.getAdminById(id);
@@ -33,7 +33,7 @@ public class AdminController {
         return adminService.createAdmin(userId);
     }
 
-    // delete admin by ID
+    // Delete an admin by ID
     @DeleteMapping("/{id}")
     public void deleteAdmin(@PathVariable Long id) {
         adminService.deleteAdmin(id);

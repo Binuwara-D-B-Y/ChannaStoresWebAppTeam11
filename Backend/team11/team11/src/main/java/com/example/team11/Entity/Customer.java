@@ -9,7 +9,7 @@ public class Customer {
     @Id
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL) // Using CascadeType.ALL instead of REMOVE
     @MapsId
     @JoinColumn(name = "id") // FK to `users.id`
     private User user;

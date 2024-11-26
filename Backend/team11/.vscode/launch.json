@@ -2,6 +2,12 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Team11Application",
+            "request": "launch",
+            "mainClass": "com.example.team11.Team11Application"
+        },
+        {
+            "type": "java",
             "name": "Spring Boot-Team11Application<team11>",
             "request": "launch",
             "cwd": "${workspaceFolder}",

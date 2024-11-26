@@ -35,7 +35,7 @@ public class CustomerController {
         return ResponseEntity.ok(createdCustomer);
     }
     
-    // get Customer by id
+
     @GetMapping("/{id}")
     public ResponseEntity<Customer> getCustomerById(@PathVariable Long id) throws Exception {
         Customer customer = customerService.getCustomerById(id); 
@@ -43,7 +43,6 @@ public class CustomerController {
         return ResponseEntity.ok(customer);
     }
 
-    //retrive all customers
     @GetMapping
     public ResponseEntity<List<Customer>> getAllCustomers() {
         List<Customer> customers = customerService.getAllCustomers(); 
@@ -51,18 +50,17 @@ public class CustomerController {
         return ResponseEntity.ok(customers);
     }
 
-    // update customer details
     @PutMapping("/{id}")
     public ResponseEntity<Customer> updateCustomer(@PathVariable Long id, @Validated @RequestBody CustomerDTO customerDTO) throws Exception {
         Customer updatedCustomer = customerService.updateCustomer(id, customerDTO);
         return ResponseEntity.ok(updatedCustomer);
     }
 
-    // deleting a customer
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCustomer(@PathVariable Long id) throws Exception {
         customerService.deleteCustomer(id);
         return ResponseEntity.noContent().build();
+
     }
 
 }

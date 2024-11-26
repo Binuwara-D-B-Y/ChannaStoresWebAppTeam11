@@ -6,9 +6,9 @@ import jakarta.persistence.*;
 @Table(name = "suppliers")
 public class Supplier {
     @Id
-    private Long id; // User's ID, FK
+    private Long id; // Same as User's ID, FK
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL) // Using CascadeType.ALL instead of REMOVE
     @MapsId
     @JoinColumn(name = "id") // FK to users.id
     private User user;

@@ -24,16 +24,13 @@
         <!-- Update Profile Form -->
         <form id="update-profile-form">
             <label for="name">Name:</label>
-            <input type="text" id="name" value="John Doe"><br><br>
+            <input type="text" id="name" value="yesen"><br><br>
 
             <label for="email">Email:</label>
-            <input type="email" id="email" value="john@example.com"><br><br>
+            <input type="email" id="email" value="yesen@gmail.com"><br><br>
 
             <label for="phone">Phone:</label>
-            <input type="text" id="phone" value="123-456-7890"><br><br>
-
-            <label for="age">Age:</label>
-            <input type="number" id="age" value="30" min="0"><br><br> <!-- Restrict negative values -->
+            <input type="text" id="phone" value="0778899445"><br><br>
 
             <button type="submit">Update Profile</button>
         </form>
@@ -57,38 +54,146 @@
 
     </main>
 
+
     <footer>
         <p>&copy; 2024 Shop Management System</p>
     </footer>
 
+
     <script>
-        // Update Profile Handler
-        document.getElementById('update-profile-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const phone = document.getElementById('phone').value;
-            const age = document.getElementById('age').value;
+        window.onload = function () {
+            // Get the user data from localStorage
+            const userData = JSON.parse(localStorage.getItem('userData'));
 
-            alert(`Profile updated successfully!\n\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nAge: ${age}`);
-            // Logic to save updated profile (backend integration)
-        });
+            if (userData) {
+                // Get the user ID from the stored user data
+                const userID = userData.id;
 
-        // Update Password Handler
-        document.getElementById('update-password-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const currentPassword = document.getElementById('current-password').value;
-            const newPassword = document.getElementById('new-password').value;
-            const confirmPassword = document.getElementById('confirm-password').value;
+                // Fetch admin data by ID from the API
+                fetch(`http://localhost:8080/api/admins/${userID}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Populate the form fields with the data returned from the API
+                        document.getElementById('name').value = data.user.username || '';
+                        document.getElementById('email').value = data.user.email || '';
+                        document.getElementById('phone').value = data.phoneNumber || '';
+                        document.getElementById('current-password').value = data.password || '';
 
-            if (newPassword !== confirmPassword) {
-                alert('New passwords do not match!');
-                return;
+                        console.log('User data loaded from API:', data);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching supplier data:', error);
+                    });
+            } else {
+                console.log('No user data found in localStorage');
             }
+        };
 
-            alert('Password updated successfully!');
-            // Logic to update password (backend integration)
-        });
+
+
+        // Retrieve user data from localStorage
+        const userData = JSON.parse(localStorage.getItem('userData'));
+        const userID = userData ? userData.id : null;
+
+        if (!userID) {
+            console.error('User ID not found in localStorage!');
+        } else {
+            // Update Profile Handler
+            document.getElementById('update-profile-form').addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const phone = document.getElementById('phone').value;
+
+                const updatedData = {
+                    username: name,
+                    email: email,                   
+                    phoneNumber: phone,
+
+                };
+
+                fetch(`http://localhost:8080/api/admins/${userID}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(updatedData),
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        alert('Profile updated successfully!');
+                        console.log(data);
+                    })
+                    .catch((error) => {
+                        alert('Error updating profile!');
+                        console.error(error);
+                    });
+            });
+
+            // Update Password Handler
+            document.getElementById('update-password-form').addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                const currentPassword = document.getElementById('current-password').value;
+                const newPassword = document.getElementById('new-password').value;
+                const confirmPassword = document.getElementById('confirm-password').value;
+
+                // Validate inputs
+                if (!userData.password) {
+                    alert('Current password not available. Please refresh the page or log in again.');
+                    return;
+                }
+
+                
+                // Check if the current password matches
+
+                console.log(currentPassword, +"  ," + userData.password)
+
+                if (currentPassword !== userData.password) {
+                    alert('Current password is incorrect!');
+                    return;
+                }
+
+                // Check if new password is the same as the current password
+                if (currentPassword === newPassword) {
+                    alert('New password cannot be the same as the current password!');
+                    return;
+                }
+
+                // Check if new password and confirm password match
+                if (newPassword !== confirmPassword) {
+                    alert('New passwords do not match!');
+                    return;
+                }
+
+                // Prepare the updated password data
+                const updatedPasswordData = {
+                    password: newPassword,
+                };
+
+                fetch(`http://localhost:8080/api/admins/${userID}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(updatedPasswordData),
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        alert('Password updated successfully!');
+                        console.log(data);
+                        window.location.href = 'login.html'; // Redirect to login page after password updated
+
+                    })
+                    .catch((error) => {
+                        alert('Error updating password!');
+                        console.error(error);
+                    });
+            });
+
+            
+        }
 
     </script>
 </body>

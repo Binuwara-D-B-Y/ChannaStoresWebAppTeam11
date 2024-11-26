@@ -20,21 +20,21 @@ public class AdminService {
     @Autowired
     private UserRepository userRepository;
 
-    // get all admins as DTOs
+    // Get all admins as DTOs
     public List<AdminDTO> getAllAdmins() {
         return adminRepository.findAll().stream()
                 .map(admin -> new AdminDTO(admin.getId(), admin.getUser().getEmail()))
                 .collect(Collectors.toList());
     }
 
-    // get admin by ID as DTO
+    // Get a single admin by ID as a DTO
     public AdminDTO getAdminById(Long id) {
         Admin admin = adminRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Admin not found"));
         return new AdminDTO(admin.getId(), admin.getUser().getEmail());
     }
 
-    // create a new admin to an existing user
+    // Create a new admin (linking to an existing user)
     public Admin createAdmin(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -46,7 +46,7 @@ public class AdminService {
         return adminRepository.save(admin);
     }
 
-    // delete an admin by ID
+    // Delete an admin by ID
     public void deleteAdmin(Long id) {
         Admin admin = adminRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Admin not found"));

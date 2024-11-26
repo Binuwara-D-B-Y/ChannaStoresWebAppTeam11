@@ -15,13 +15,11 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // create a user record
     @PostMapping
     public User createUser(@RequestBody User user) {
         return userService.createUser(user);
     }
 
-    // validating login details
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user) {
         boolean isAuthenticated = userService.authenticateUser(user.getEmail(), user.getPassword());

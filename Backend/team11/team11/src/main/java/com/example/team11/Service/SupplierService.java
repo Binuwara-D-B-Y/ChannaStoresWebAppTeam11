@@ -24,63 +24,69 @@ public class SupplierService {
     private UserRepository userRepository;
 
     public Supplier createSupplier(Long userId, SupplierDTO supplierDTO) {
-        // check supplier exists
+        // Check if the user exists
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new RuntimeException("User with ID " + userId + " not found"));
         
-        // check if user is already a supplier
+        // Check if the user is already a supplier
         Optional<Supplier> existingSupplier = supplierRepository.findById(userId);
         if (existingSupplier.isPresent()) {
             throw new RuntimeException("User with ID " + userId + " is already a supplier");
         }
         
-        // map SupplierDTO to Supplier Entity
+        // Map SupplierDTO to Supplier Entity
         Supplier supplier = new Supplier();
-        supplier.setUser(user);
+        supplier.setUser(user);  // Set the existing user as the supplier's user
         supplier.setCompany(supplierDTO.getCompany());
         supplier.setAddress(supplierDTO.getAddress());
         supplier.setPhoneNumber(supplierDTO.getPhoneNumber());
         
+        // Save supplier to the database
         return supplierRepository.save(supplier);
     }
 
     public Supplier getSupplierById(Long id) {
+        // Find the supplier by ID, throws exception if not found
         return supplierRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Supplier with ID " + id + " not found"));
     }
 
     public List<Supplier> getAllSuppliers() {
+        // Return all suppliers
         return supplierRepository.findAll();
     }
 
     @Transactional
     public Supplier updateSupplier(Long id, SupplierDTO supplierDTO) throws Exception {
-        // get supplier by ID
+        // Fetch supplier by ID
         Supplier supplier = supplierRepository.findById(id)
             .orElseThrow(() -> new Exception("Supplier with ID " + id + " not found"));
 
-        // update supplier details
+        // Update supplier-specific fields
         supplier.setCompany(supplierDTO.getCompany());
         supplier.setAddress(supplierDTO.getAddress());
         supplier.setPhoneNumber(supplierDTO.getPhoneNumber());
         supplierRepository.save(supplier);
 
-        // // retrive the user related to customer
-        User user = supplier.getUser();
+        // Fetch the related user (assuming a Supplier has a related User)
+        User user = supplier.getUser(); // Assuming there is a `getUser()` method in Supplier
         if (user != null) {
-            // Update user fields
+            // Update user-related fields (e.g., email, username)
             user.setEmail(supplierDTO.getEmail());
             user.setPassword(supplierDTO.getPassword());
             user.setUsername(supplierDTO.getUsername());
             userRepository.save(user);
         }
-        return supplier;
+
+        return supplier; // Return the updated supplier
     }
 
     public void deleteSupplier(Long id) throws Exception {
-        // check if supplier exists
+        // Validate if supplier exists
         Supplier supplierToDelete = supplierRepository.findById(id)
             .orElseThrow(() -> new Exception("Supplier with ID " + id + " not found"));
+
+        // Delete supplier
         supplierRepository.delete(supplierToDelete);
     }
 }

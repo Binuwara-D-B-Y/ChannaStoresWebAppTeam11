@@ -12,18 +12,18 @@ public class UserService {
     private UserRepository userRepository;
 
     public User createUser(User user) {
-        return userRepository.save(user);
+        return userRepository.save(user);  // No password encoding
     }
 
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email);
+        return userRepository.findByEmail(email);  // Find user by email
     }
 
     public boolean authenticateUser(String email, String password) {
         User user = findByEmail(email);
         if (user == null) {
-            return false;  // user deosnt exist
+            return false;  // User not found
         }
-        return password.equals(user.getPassword());  // validate passwords
+        return password.equals(user.getPassword());  // Direct comparison of passwords
     }
 }

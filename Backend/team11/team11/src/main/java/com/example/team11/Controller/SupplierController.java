@@ -19,10 +19,9 @@ public class SupplierController {
     @Autowired
     private SupplierService supplierService;
 
-    // create a Supplier
     @PostMapping
     public ResponseEntity<Supplier> createSupplier(@RequestBody Map<String, Object> requestBody) {
-        Long userId = Long.valueOf(requestBody.get("userId").toString()); // get id from user
+        Long userId = Long.valueOf(requestBody.get("userId").toString());
         SupplierDTO supplierDTO = new SupplierDTO();
         supplierDTO.setCompany(requestBody.get("company").toString());
         supplierDTO.setAddress(requestBody.get("address").toString());
@@ -32,28 +31,24 @@ public class SupplierController {
         return ResponseEntity.ok(createdSupplier);
     }
 
-    // retrive supplier by id
     @GetMapping("/{id}")
     public ResponseEntity<Supplier> getSupplierById(@PathVariable Long id) {
         Supplier supplier = supplierService.getSupplierById(id);
         return ResponseEntity.ok(supplier);
     }
 
-    // display all suppliers
     @GetMapping
     public ResponseEntity<List<Supplier>> getAllSuppliers() {
         List<Supplier> suppliers = supplierService.getAllSuppliers();
         return ResponseEntity.ok(suppliers);
     }
 
-    // update supplier
     @PutMapping("/{id}")
     public ResponseEntity<Supplier> updateSupplier(@PathVariable Long id, @RequestBody SupplierDTO supplierDTO) throws Exception {
         Supplier updatedSupplier = supplierService.updateSupplier(id, supplierDTO);
         return ResponseEntity.ok(updatedSupplier);
     }
 
-    // delete a supplier
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSupplier(@PathVariable Long id) throws Exception {
         supplierService.deleteSupplier(id);
