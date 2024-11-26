@@ -124,7 +124,7 @@ function updateQuantity(itemId) {
         }
 
         function updateCartQuantityInBackend(itemId, newQuantity) {
-            fetch(`http://localhost:8080/api/cart/1/items/${itemId}/quantity`, { // Replace with actual cartId
+            fetch(`http://localhost:8080/api/cart/1/items/${itemId}/quantity`, { 
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
