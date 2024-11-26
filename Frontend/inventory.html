@@ -25,7 +25,7 @@
     <main>
         <h2>Inventory Management</h2>
 
-        
+        <!-- Add New Product Form -->
         <section id="add-product">
             <h3>Add New Product</h3>
             <form id="add-product-form">
@@ -43,16 +43,14 @@
 
                 <label for="product-category">Category:</label>
                 <select id="product-category" required>
-                    <option value="Dairy">Dairy</option>
-                    <option value="Herbs & Spices">Herbs & Spices</option>
-                    <option value="Meat & Seafood">Meat & Seafood</option>
-                    <option value="Bakery & Bread">Bakery & Bread</option>
-                    <option value="Pantry Staples">Pantry Staples</option>
-                    <option value="Snacks">Snacks</option>
-                    <option value="Frozen Foods">Frozen Foods</option>
-                    <option value="Health & Beauty care">Health & Beauty care</option>
-                    <option value="Beverages">Beverages</option>
-                    <option value="Stationary">Stationary</option>
+                        <option value="all">All</option>
+                        <option value="Beverages">Beverage</option>
+                        <option value="Dairy">Dairy</option>
+                        <option value="Bakery">Bakery</option>
+                        <option value="Staples">Staples</option>
+                        <option value="Snacks">Snacks</option>
+                        <option value="Health">Health</option>
+                        <option value="Household">Household</option>
                 </select>
 
                 <button type="submit">Add Product</button>
@@ -77,16 +75,14 @@
 
                 <label for="update-product-category">Category:</label>
                 <select id="update-product-category">
-                    <option value="Dairy">Dairy</option>
-                    <option value="Herbs & Spices">Herbs & Spices</option>
-                    <option value="Meat & Seafood">Meat & Seafood</option>
-                    <option value="Bakery & Bread">Bakery & Bread</option>
-                    <option value="Pantry Staples">Pantry Staples</option>
-                    <option value="Snacks">Snacks</option>
-                    <option value="Frozen Foods">Frozen Foods</option>
-                    <option value="Health & Beauty care">Health & Beauty care</option>
-                    <option value="Beverages">Beverages</option>
-                    <option value="Stationary">Stationary</option>
+                        <option value="all">All</option>
+                        <option value="Beverages">Beverage</option>
+                        <option value="Dairy">Dairy</option>
+                        <option value="Bakery">Bakery</option>
+                        <option value="Staples">Staples</option>
+                        <option value="Snacks">Snacks</option>
+                        <option value="Health">Health</option>
+                        <option value="Household">Household</option>
                 </select>
 
                 <button type="submit">Update Product</button>
@@ -128,7 +124,7 @@
         <p>&copy; 2024 Shop Management System</p>
     </footer>
 
-   
+    <!-- JavaScript for CRUD Operations -->
     <script>
         // Dummy product data (to be replaced by actual DB data)
         const products = [
