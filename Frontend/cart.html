@@ -152,7 +152,7 @@ function updateQuantity(itemId) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Function to remove a product from the cart
         function removeFromCart(itemId) {
-            fetch(`http://localhost:8080/api/cart/1/items/${itemId}`, { // Replace with actual cartId
+            fetch(`http://localhost:8080/api/cart/1/items/${itemId}`, { 
                 method: 'DELETE'
             })
             .then(response => {
@@ -176,9 +176,9 @@ function updateQuantity(itemId) {
                 return;
             }
 
-           
+          
             alert('Order placed successfully!');
-            cart = [];  // Empty the cart
+            cart = [];  // Empty the cart 
             renderCart();  // render the cart
         });
 
@@ -186,9 +186,8 @@ function updateQuantity(itemId) {
         fetchCartItems();
 
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Checkout functionality
+        // Checkout
         document.getElementById('checkout-button').addEventListener('click', function() {
             if (cart.length === 0) {
                 alert('Your cart is empty!');
@@ -197,7 +196,7 @@ function updateQuantity(itemId) {
 
            
             alert('Order placed successfully!');
-            cart = [];  // Empty the cart
+            cart = [];  // Empty the cart 
             renderCart();  // render the cart
         });
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
