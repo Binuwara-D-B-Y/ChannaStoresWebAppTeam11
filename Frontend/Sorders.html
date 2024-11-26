@@ -10,23 +10,21 @@
     <header>
         <nav>
             <ul class="tabs">
-                <li class="store-name">Channa Stores</li> 
-                <li><a href="products.html" class="tab">Products</a></li>
-                <li><a href="cart.html" class="tab">Cart</a></li>
-                <li><a href="orders.html" class="tab  active">Orders</a></li>
-                <li><a href="profile.html" class="tab">Profile</a></li>
+                <li class="store-name">Channa Stores</li>
+                <li><a href="inventory.html" class="tab">Inventory</a></li>
+                <li><a href="Sorders.html" class="tab active">Orders</a></li>
+                <li><a href="Sprofile.html" class="tab">Profile</a></li>
                 <li class="signout-tab"><a href="login.html" class="tab">Sign Out</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
-
-       <!-- Order List Table -->
-       <section id="order-list">
-        <h2>Orders</h2>
-        <table id="orders-table">
-            <thead>
+         <!-- Order List Table -->
+        <section id="order-list">
+            <h3>Orders</h3>
+            <table id="orders-table">
+                <thead>
                     <tr>
                         <th>Order ID</th>
                         <th>Products</th>
@@ -36,7 +34,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Dynamically populated order rows will go here -->
+                   
                 </tbody>
             </table>
         </section>
@@ -79,7 +77,13 @@
                     <td>${order.id}</td>
                     <td>${order.products.map(p => `${p.name} (x${p.quantity})`).join(', ')}</td>
                     <td>Rs.${order.total.toFixed(2)}</td>
-                    <td>${order.status}</td> 
+                    <td>
+                        <select id="order-status-${order.id}" onchange="updateOrderStatus(${order.id})">
+                            <option value="Pending" ${order.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                            <option value="Shipped" ${order.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
+                            <option value="Completed" ${order.status === 'Completed' ? 'selected' : ''}>Completed</option>
+                        </select>
+                    </td>
                     <td><button onclick="viewOrder(${order.id})">View</button></td>
                 `;
                 ordersTableBody.appendChild(row);

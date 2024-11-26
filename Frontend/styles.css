@@ -43,12 +43,9 @@
         }
     
 
-/* General reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+
+
+
 
 /* Body and overall layout */
 body {
@@ -58,25 +55,6 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-}
-
-main {
-    flex: 1;
-    padding: 20px;
-    margin: 20px auto; /* Adds little space at the top and centers content */
-    max-width: 1200px;
-    width: 90%; /* Margins on both sides */
-}
-
-footer {
-    text-align: center;
-    padding: 10px;
-    background-color: #333;
-    color: white;
-    width: 100%;
-    font-size: 14px;
-    position: relative;
-    bottom: 0;
 }
 
 /* Navigation bar as tabs */
@@ -112,6 +90,27 @@ ul.tabs li a.tab:hover,
 ul.tabs li a.tab.active {
     background-color: #007BFF;
     color: white;
+}
+
+
+/* Page content */
+main {
+    flex: 1; /* Allows the content to fill the space between header and footer */
+    padding: 20px;
+    margin: 20px auto 0; /* Add space at the top and auto-align content horizontally */
+    width: 90%; /* Margins on both sides */
+    max-width: 1200px; /* Limit the content width */
+}
+
+footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #333;
+    color: white;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    font-size: 14px;
 }
 
 /* Specific page sections */
