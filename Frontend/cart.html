@@ -54,7 +54,7 @@
 
         // Function to fetch cart items from the backend
         function fetchCartItems() {
-            fetch('http://localhost:8080/api/cart/1/items/items') // Replace with actual cartId
+            fetch('http://localhost:8080/api/cart/1/items/items') 
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Failed to fetch cart items');
