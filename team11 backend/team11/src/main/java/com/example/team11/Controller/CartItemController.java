@@ -4,6 +4,7 @@ import com.example.team11.DTO.CartItemDTO;
 import com.example.team11.Service.CartItemService;
 
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 
 @RestController
 @RequestMapping("/api/cart/{cartId}/items")
@@ -59,15 +59,20 @@ public class CartItemController {
         }
     }
 
-     // Update the quantity of a CartItem
-     @PatchMapping("/{itemId}/quantity")
-     public ResponseEntity<String> updateCartItemQuantity(@PathVariable Long cartId, @PathVariable Long itemId, @RequestBody int newQuantity) {
-         try {
-             cartItemService.updateCartItemQuantity(cartId, itemId, newQuantity);
-             return ResponseEntity.ok("Cart item quantity updated successfully!");
-         } catch (Exception e) {
-             logger.error("Error updating cart item quantity", e);
-             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating cart item quantity");
-         }
-     }
- }
+    // Update the quantity of a CartItem
+    // Update the quantity of a CartItem
+@PatchMapping("/{itemId}/quantity")
+public ResponseEntity<String> updateCartItemQuantity(@PathVariable Long cartId, @PathVariable Long itemId, @RequestBody Map<String, Integer> request) {
+    try {
+        if (!request.containsKey("quantity")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Missing 'quantity' field");
+        }
+        int newQuantity = request.get("quantity");
+        cartItemService.updateCartItemQuantity(cartId, itemId, newQuantity);
+        return ResponseEntity.ok("Cart item quantity updated successfully!");
+    } catch (Exception e) {
+        logger.error("Error updating cart item quantity", e);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating cart item quantity");
+    }
+}
+}
