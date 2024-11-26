@@ -52,6 +52,9 @@ body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
     background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 /* Navigation bar as tabs */
@@ -92,9 +95,11 @@ ul.tabs li a.tab.active {
 
 /* Page content */
 main {
+    flex: 1; /* Allows the content to fill the space between header and footer */
     padding: 20px;
-    max-width: 1200px;
-    margin: auto;
+    margin: 20px auto 0; /* Add space at the top and auto-align content horizontally */
+    width: 90%; /* Margins on both sides */
+    max-width: 1200px; /* Limit the content width */
 }
 
 footer {
