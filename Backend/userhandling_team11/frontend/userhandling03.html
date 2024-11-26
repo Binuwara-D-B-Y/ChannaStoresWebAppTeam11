@@ -96,7 +96,7 @@
 
         <!-- Update Account Form -->
         <section id="update-account">
-            <h3>Update Account</h3>
+            <h3>Search Account</h3>
             <form id="update-account-form" onsubmit="event.preventDefault(); updateAccount();">
                 <label for="search-update">Search by ID or Name:</label>
                 <input type="text" id="search-update" placeholder="Enter ID or Name">
@@ -121,6 +121,7 @@
                 <label for="update-role">Role:</label>
                 <select id="update-role" required>
                     <option value="supplier">Supplier</option>
+                    <option value="customer">Customer</option>
                     <option value="admin">Admin</option>
                 </select>
 
@@ -183,7 +184,9 @@
             </div>
         </div>
     </main>
-
+    <footer>
+        <p>&copy; 2024 Shop Management System</p>
+    </footer>
 
     <script>
 
