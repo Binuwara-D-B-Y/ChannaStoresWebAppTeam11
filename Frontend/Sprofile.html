@@ -26,18 +26,15 @@
 
         <!-- Update Profile Form -->
         <form id="update-profile-form">
-            <label for="name">Name:</label>
-            <input type="text" id="name" value="Jenny" required><br><br>
-
+            <label for="username">Name:</label>
+            <input type="text" id="username" value="Jenny" required><br><br>
+        
             <label for="email">Email:</label>
             <input type="email" id="email" value="jen@gmail.com" required><br><br>
-
-
-            <label for="phone">Phone:</label>
-            <input type="text" id="phone" value="0763849345" required><br><br>
-
-
-
+        
+            <label for="phoneNumber">Phone:</label>
+            <input type="text" id="phoneNumber" value="0763849345" required><br><br>
+        
             <button type="submit">Update Profile</button>
         </form>
 
@@ -72,136 +69,126 @@
 
     <script>
         window.onload = function () {
-            // Get the user data from localStorage
-            const userData = JSON.parse(localStorage.getItem('userData'));
+    // Get the user data from localStorage
+    const userData = JSON.parse(localStorage.getItem('userData'));
 
-            if (userData) {
-                // Get the user ID from the stored user data
-                const userID = userData.id;
+    if (userData) {
+        // Get the user ID from the stored user data
+        const userID = userData.id;
 
-                // Fetch supplir data by ID from the API
-                fetch(`http://localhost:8080/api/suppliers/${userID}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        // Populate the form fields with the data returned from the API
-                        document.getElementById('name').value = data.user.username || '';
-                        document.getElementById('email').value = data.user.email || '';
-                        document.getElementById('phone').value = data.phoneNumber || '';
-                        document.getElementById('current-password').value = data.password || '';
+        // Fetch supplier data by ID from the API
+        fetch(`http://localhost:8080/api/suppliers/${userID}`)
+            .then(response => response.json())
+            .then(data => {
+                // Populate the form fields with the data returned from the API
+                document.getElementById('username').value = data.user.username || '';
+                document.getElementById('email').value = data.user.email || '';
+                document.getElementById('phoneNumber').value = data.phoneNumber || '';
 
-                        console.log('User data loaded from API:', data);
-                    })
-                    .catch(error => {
-                        console.error('Error fetching supplier data:', error);
-                    });
-            } else {
-                console.log('No user data found in localStorage');
-            }
+                console.log('User data loaded from API:', data);
+            })
+            .catch(error => {
+                console.error('Error fetching supplier data:', error);
+            });
+    } else {
+        console.log('No user data found in localStorage');
+    }
+};
+
+// Retrieve user data from localStorage
+const userData = JSON.parse(localStorage.getItem('userData'));
+const userID = userData ? userData.id : null;
+
+if (!userID) {
+    console.error('User ID not found in localStorage!');
+} else {
+    // Update Profile Handler
+    document.getElementById('update-profile-form').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const username = document.getElementById('username').value;
+        const email = document.getElementById('email').value;
+        const phoneNumber = document.getElementById('phoneNumber').value;
+
+        const updatedData = {
+            username: username,
+            email: email,
+            phoneNumber: phoneNumber,
         };
 
-
-
-        // Retrieve user data from localStorage
-        const userData = JSON.parse(localStorage.getItem('userData'));
-        const userID = userData ? userData.id : null;
-
-        if (!userID) {
-            console.error('User ID not found in localStorage!');
-        } else {
-            // Update Profile Handler
-            document.getElementById('update-profile-form').addEventListener('submit', function (event) {
-                event.preventDefault();
-
-                const name = document.getElementById('name').value;
-                const email = document.getElementById('email').value;
-                const phone = document.getElementById('phone').value;
-
-                const updatedData = {
-                    username: name,
-                    email: email,                  
-                    phoneNumber: phone,
-                };
-
-                fetch(`http://localhost:8080/api/suppliers/${userID}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(updatedData),
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        alert('Profile updated successfully!');
-                        console.log(data);
-                    })
-                    .catch((error) => {
-                        alert('Error updating profile!');
-                        console.error(error);
-                    });
+        fetch(`http://localhost:8080/api/suppliers/${userID}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedData),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                alert('Profile updated successfully!');
+                console.log(data);
+            })
+            .catch((error) => {
+                alert('Error updating profile!');
+                console.error(error);
             });
+    });
 
-            // Update Password Handler
-            document.getElementById('update-password-form').addEventListener('submit', function (event) {
-                event.preventDefault();
+    // Update Password Handler
+    document.getElementById('update-password-form').addEventListener('submit', function (event) {
+        event.preventDefault();
 
-                const currentPassword = document.getElementById('current-password').value;
-                const newPassword = document.getElementById('new-password').value;
-                const confirmPassword = document.getElementById('confirm-password').value;
+        const currentPassword = document.getElementById('current-password').value;
+        const newPassword = document.getElementById('new-password').value;
+        const confirmPassword = document.getElementById('confirm-password').value;
 
-                // Validate inputs
-                if (!userData.password) {
-                    alert('Current password not available. Please refresh the page or log in again.');
-                    return;
-                }
+        // Validate inputs
+        if (!userData.password) {
+            alert('Current password not available. Please refresh the page or log in again.');
+            return;
+        }
 
-                
-                // Check if the current password matches
+        // Check if the current password matches
+        if (currentPassword !== userData.password) {
+            alert('Current password is incorrect!');
+            return;
+        }
 
-                console.log(currentPassword, +"  ," + userData.password)
+        // Check if new password is the same as the current password
+        if (currentPassword === newPassword) {
+            alert('New password cannot be the same as the current password!');
+            return;
+        }
 
-                if (currentPassword !== userData.password) {
-                    alert('Current password is incorrect!');
-                    return;
-                }
+        // Check if new password and confirm password match
+        if (newPassword !== confirmPassword) {
+            alert('New passwords do not match!');
+            return;
+        }
 
-                // Check if new password is the same as the current password
-                if (currentPassword === newPassword) {
-                    alert('New password cannot be the same as the current password!');
-                    return;
-                }
+        // Prepare the updated password data
+        const updatedPasswordData = {
+            password: newPassword,
+        };
 
-                // Check if new password and confirm password match
-                if (newPassword !== confirmPassword) {
-                    alert('New passwords do not match!');
-                    return;
-                }
-
-                // Prepare the updated password data
-                const updatedPasswordData = {
-                    password: newPassword,
-                };
-
-                fetch(`http://localhost:8080/api/suppliers/${userID}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(updatedPasswordData),
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        alert('Password updated successfully!');
-                        console.log(data);
-                        window.location.href = 'login.html'; // Redirect to login page after password updated
-
-
-                    })
-                    .catch((error) => {
-                        alert('Error updating password!');
-                        console.error(error);
-                    });
+        fetch(`http://localhost:8080/api/suppliers/${userID}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedPasswordData),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                alert('Password updated successfully!');
+                console.log(data);
+                window.location.href = 'login.html'; // Redirect to login page after password updated
+            })
+            .catch((error) => {
+                alert('Error updating password!');
+                console.error(error);
             });
-
+    });
             // Delete Account Handler
             document.getElementById('delete-account-button').addEventListener('click', function () {
                 const confirmation = confirm('Are you sure you want to delete your account? This action cannot be undone.');
