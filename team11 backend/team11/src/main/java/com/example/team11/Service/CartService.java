@@ -46,7 +46,7 @@ private CartDTO convertToDTO(Cart cart) {
     List<CartItemDTO> cartItemDTOs = cart.getItems().stream()
             .map(item -> {
                 CartItemDTO cartItemDTO = new CartItemDTO();
-                cartItemDTO.setProductId(item.getProductId());
+                cartItemDTO.setId(item.getId());
                 cartItemDTO.setProductName(item.getProductName());
                 cartItemDTO.setQuantity(item.getQuantity());
                 cartItemDTO.setPrice(item.getPrice());
