@@ -1,18 +1,18 @@
 package com.example.team11.DTO;
 
 public class ProductDTO {
-    private int id;
+    private Long id;
     private String name;
     private double price;
     private int quantity;
     private String category;
 
     // Getters and Setters
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
