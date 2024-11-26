@@ -21,7 +21,7 @@ public class ProductService {
     }
 
     public ProductDTO getProductById(int id) {
-        return productRepository.findById(id).map(this::convertToDTO).orElse(null);
+        return productRepository.findById((long) id).map(this::convertToDTO).orElse(null);
     }
 
     public void addProduct(ProductDTO productDTO) {
@@ -30,7 +30,7 @@ public class ProductService {
     }
 
     public boolean updateProduct(ProductDTO productDTO) {
-        if (productRepository.existsById(productDTO.getId())) {
+        if (productRepository.existsById((long) productDTO.getId())) {
             Product product = convertToEntity(productDTO);
             productRepository.save(product);
             return true;
@@ -39,8 +39,8 @@ public class ProductService {
     }
 
     public boolean deleteProduct(int id) {
-        if (productRepository.existsById(id)) {
-            productRepository.deleteById(id);
+        if (productRepository.existsById((long) id)) {
+            productRepository.deleteById((long) id);
             return true;
         }
         return false;
@@ -66,4 +66,7 @@ public class ProductService {
         product.setCategory(productDTO.getCategory());
         return product;
     }
+
+
+    
 }
